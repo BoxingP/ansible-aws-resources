@@ -1,0 +1,7 @@
+---
+aws_s3_region: cn-northwest-1
+aws_s3_buckets:
+  - bucket_name: b2b-marketplace-test
+    directories_in_bucket:
+      - casmart
+      - thermofisher

@@ -1,0 +1,67 @@
+- name: get iam user info
+  community.aws.iam_user_info:
+    region: cn-north-1
+    name: '{{ iam_user_name }}'
+  register: result
+
+- name: remove exist iam user
+  community.aws.iam:
+    region: cn-north-1
+    iam_type: user
+    name: '{{ iam_user_name }}'
+    state: absent
+  when: result['iam_users'] | length > 0 and result['iam_users'][0]['user_name'] is defined and result['iam_users'][0]['user_name'] == iam_user_name
+
+- name: create iam user
+  community.aws.iam:
+    region: cn-north-1
+    iam_type: user
+    name: '{{ iam_user_name }}'
+    state: present
+    access_key_state: create
+  register: credentials
+
+- name: set created iam user access keys
+  set_fact:
+    created_user_access_key_id: '{{ credentials.user_meta.access_keys[0].access_key_id }}'
+    created_user_secret_access_key: '{{ credentials.user_meta.access_keys[0].secret_access_key }}'
+
+- name: save iam user access keys to file
+  block:
+    - name: init file
+      copy:
+        content: "{}"
+        dest: '/tmp/{{ iam_user_name }}_access_keys.json'
+        force: yes
+    - name: append more key/values
+      set_fact:
+        variables: "{{ '{}'|from_json | default([]) | combine({ 'AWS-Account-ID': aws_credential.aws_account_id, 'IAM-User-Name': iam_user_name, 'IAM-User-Access-Key-ID': created_user_access_key_id, 'IAM-User-Secret-Access-Key': created_user_secret_access_key }) }}"
+    - name: save access keys to file
+      copy:
+        content: "{{ variables | to_nice_json }}"
+        dest: '/tmp/{{ iam_user_name }}_access_keys.json'
+    - name: store file local
+      fetch:
+        src: '/tmp/{{ iam_user_name }}_access_keys.json'
+        dest: '/tmp/'
+        flat: yes
+  always:
+    - name: check for file remote
+      stat:
+        path: '/tmp/{{ iam_user_name }}_access_keys.json'
+      register: file_result
+    - name: remove file remote
+      file:
+        path: '/tmp/{{ iam_user_name }}_access_keys.json'
+        state: absent
+      when: file_result.stat.exists
+
+- name: attach inline policy to exist user
+  community.aws.iam_policy:
+    region: cn-north-1
+    iam_type: user
+    iam_name: '{{ iam_user_name }}'
+    policy_name: '{{ iam_user_policy_name }}'
+    state: present
+    skip_duplicates: true
+    policy_json: "{{ lookup( 'template', iam_user_policy_file_name + '.json.j2') }}"

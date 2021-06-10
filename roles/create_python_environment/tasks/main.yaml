@@ -1,0 +1,35 @@
+- name: install python and related packages
+  yum:
+    name:
+      - python3
+      - python-virtualenv
+      - python3-pip
+      - python3-devel
+      - python3-wheel
+    state: present
+  become: yes
+
+- name: upgrade pip and related
+  pip:
+    name:
+      - pip
+      - setuptools
+      - wheel
+    state: latest
+    virtualenv: '{{ virtualenv }}'
+    virtualenv_command: /usr/bin/python3 -m venv
+  become: yes
+
+- name: upload python requirements file
+  copy:
+    src: 'vars/requirements.txt'
+    dest: '{{ virtualenv }}/requirements.txt'
+    force: yes
+  become: yes
+
+- name: create python virtualenv
+  pip:
+    requirements: '{{ virtualenv }}/requirements.txt'
+    virtualenv: '{{ virtualenv }}'
+    virtualenv_command: /usr/bin/python3 -m venv
+  become: yes

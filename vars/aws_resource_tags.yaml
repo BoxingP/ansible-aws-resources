@@ -1,0 +1,12 @@
+---
+aws_resource_tags:
+  app role:
+  application owner: '{{ email_address }}'
+  application:
+  businessunit:
+  costcenter:
+  division: DSC
+  environment: tst
+  name:
+  project: B2B Marketplace
+  team name: Ops

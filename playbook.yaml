@@ -2,3 +2,48 @@
 - name: get hosts facts
   hosts: all
   gather_facts: yes
+
+- name: create aws s3 bucket and related iam users
+  hosts: centos
+  gather_facts: no
+  vars:
+    email_address: creator@example.com
+    virtualenv: '{{ hostvars[inventory_hostname].ansible_env.HOME }}/.virtualenvs/ansible-aws-s3-env'
+  vars_files:
+    - vars/aws_iam_configuration.yaml
+    - vars/aws_s3_configuration.yaml
+    - vars/aws_credentials.yaml
+    - vars/aws_resource_tags.yaml
+  tasks:
+    - name: init server environment
+      include_role:
+        name: init_server_environment
+    - name: create python environment
+      include_role:
+        name: create_python_environment
+    - name: build aws environment
+      block:
+        - include_role:
+            name: create_s3_bucket
+          vars:
+            s3_bucket_name: '{{ s3_bucket.bucket_name }}'
+            s3_bucket_directory: '{{ s3_bucket.directories_in_bucket }}'
+            s3_region: '{{ aws_s3_region }}'
+          loop: '{{ aws_s3_buckets }}'
+          loop_control:
+            loop_var: s3_bucket
+        - include_role:
+            name: create_iam_user
+          vars:
+            iam_user_name: '{{ iam_user.user_name }}'
+            iam_user_policy_name: '{{ iam_user.policy_name }}'
+            iam_user_policy_file_name: '{{ iam_user.policy_file_name }}'
+          loop: '{{ aws_iam_users }}'
+          loop_control:
+            loop_var: iam_user
+      vars:
+        ansible_python_interpreter: '{{ virtualenv }}/bin/python3'
+      environment:
+        AWS_ACCESS_KEY_ID: '{{ aws_credential.aws_access_key_id }}'
+        AWS_SECRET_ACCESS_KEY: '{{ aws_credential.aws_secret_access_key }}'
+        PATH: '{{ virtualenv }}/bin:{{ hostvars[inventory_hostname].ansible_env.PATH }}'

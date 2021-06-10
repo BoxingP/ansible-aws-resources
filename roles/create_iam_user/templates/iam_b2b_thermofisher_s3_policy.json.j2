@@ -1,0 +1,31 @@
+{
+  "Version":"2012-10-17",
+  "Statement": [
+    {
+     "Sid": "AllowUserToSeeBucketListInTheConsole",
+     "Action": ["s3:ListAllMyBuckets", "s3:GetBucketLocation"],
+     "Effect": "Allow",
+     "Resource": ["arn:aws-cn:s3:::*"]
+    },
+    {
+      "Sid": "AllowRootAndSpecificFolderListingOfSpecificBucket",
+      "Action": ["s3:ListBucket"],
+      "Effect": "Allow",
+      "Resource": ["arn:aws-cn:s3:::b2b-marketplace-test"],
+      "Condition":{"StringEquals":{"s3:prefix":["", "casmart/", "thermofisher/"],"s3:delimiter":["/"]}}
+    },
+    {
+      "Sid": "AllowListingOfSpecificFolder",
+      "Action": ["s3:ListBucket"],
+      "Effect": "Allow",
+      "Resource": ["arn:aws-cn:s3:::b2b-marketplace-test"],
+      "Condition":{"StringLike":{"s3:prefix":["casmart/*", "thermofisher/*"]}}
+    },
+    {
+      "Sid": "AllowGetAndPutObjectOfSpecificFolder",
+      "Effect": "Allow",
+      "Action": ["s3:GetObject", "s3:PutObject"],
+      "Resource": ["arn:aws-cn:s3:::b2b-marketplace-test/casmart/*", "arn:aws-cn:s3:::b2b-marketplace-test/thermofisher/*"]
+    }
+  ]
+}
