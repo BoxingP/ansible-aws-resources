@@ -1,8 +1,0 @@
----
-aws_iam_users:
-  - user_name: B2B-Casmart
-    policy_name: B2B-Casmart-S3-Policy
-    policy_file_name: iam_b2b_casmart_s3_policy
-  - user_name: B2B-ThermoFisher
-    policy_name: B2B-ThermoFisher-S3-Policy
-    policy_file_name: iam_b2b_thermofisher_s3_policy

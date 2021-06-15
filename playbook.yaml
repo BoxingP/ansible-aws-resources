@@ -10,10 +10,9 @@
     email_address: creator@example.com
     virtualenv: '{{ hostvars[inventory_hostname].ansible_env.HOME }}/.virtualenvs/ansible-aws-s3-env'
   vars_files:
-    - vars/aws_iam_configuration.yaml
-    - vars/aws_s3_configuration.yaml
+    - vars/aws_configuration.yaml
     - vars/aws_credentials.yaml
-    - vars/aws_resource_tags.yaml
+    - vars/aws_tags.yaml
   tasks:
     - name: init server environment
       include_role:
@@ -24,23 +23,11 @@
     - name: build aws environment
       block:
         - include_role:
-            name: create_s3_bucket
+            name: create_cloudformation_stack
           vars:
-            s3_bucket_name: '{{ s3_bucket.bucket_name }}'
-            s3_bucket_directory: '{{ s3_bucket.directories_in_bucket }}'
-            s3_region: '{{ aws_s3_region }}'
-          loop: '{{ aws_s3_buckets }}'
-          loop_control:
-            loop_var: s3_bucket
-        - include_role:
-            name: create_iam_user
-          vars:
-            iam_user_name: '{{ iam_user.user_name }}'
-            iam_user_policy_name: '{{ iam_user.policy_name }}'
-            iam_user_policy_file_name: '{{ iam_user.policy_file_name }}'
-          loop: '{{ aws_iam_users }}'
-          loop_control:
-            loop_var: iam_user
+            cloudformation_name: b2b-marketplace-test
+            cloudformation_template: b2b-marketplace-test.yaml
+            cloudformation_tags: '{{ aws_cloudformation_tags }}'
       vars:
         ansible_python_interpreter: '{{ virtualenv }}/bin/python3'
       environment:

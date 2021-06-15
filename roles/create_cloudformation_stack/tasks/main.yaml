@@ -1,0 +1,37 @@
+- name: generate cloudformation template
+  template:
+    src: '{{ cloudformation_template }}.j2'
+    dest: '/tmp/{{ cloudformation_template }}'
+    force: yes
+
+- name: create cloudformation stack
+  amazon.aws.cloudformation:
+    region: '{{ aws_region }}'
+    stack_name: '{{ cloudformation_name }}'
+    template: '/tmp/{{ cloudformation_template }}'
+    tags:
+      '{{ cloudformation_tags }}'
+  register: cloudformation_result
+
+- name: save iam users access keys to file
+  block:
+    - name: save access keys to file
+      copy:
+        content: "{{ cloudformation_result.stack_outputs | to_nice_yaml }}"
+        dest: '/tmp/iam_users_access_keys.yaml'
+        force: yes
+    - name: store file local
+      fetch:
+        src: '/tmp/iam_users_access_keys.yaml'
+        dest: '/tmp/'
+        flat: yes
+  always:
+    - name: check for file remote
+      stat:
+        path: '/tmp/iam_users_access_keys.yaml'
+      register: file_result
+    - name: remove file remote
+      file:
+        path: '/tmp/iam_users_access_keys.yaml'
+        state: absent
+      when: file_result.stat.exists

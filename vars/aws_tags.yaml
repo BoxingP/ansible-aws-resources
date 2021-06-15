@@ -1,0 +1,33 @@
+---
+aws_cloudformation_tags:
+  app role:
+  application owner: '{{ email_address }}'
+  application:
+  businessunit:
+  costcenter:
+  division: DSC
+  environment: tst
+  name:
+  project: B2B Marketplace
+  team name: Ops
+aws_resource_tags:
+  - Key: 'app role'
+    Value: ''
+  - Key: 'application owner'
+    Value: '{{ email_address }}'
+  - Key: 'application'
+    Value: ''
+  - Key: 'businessunit'
+    Value: ''
+  - Key: 'costcenter'
+    Value: ''
+  - Key: 'division'
+    Value: 'DSC'
+  - Key: 'environment'
+    Value: 'tst'
+  - Key: 'name'
+    Value: ''
+  - Key: 'project'
+    Value: 'B2B Marketplace'
+  - Key: 'team name'
+    Value: 'Ops'
