@@ -7,6 +7,16 @@ Resources:
     Properties:
       AccessControl: Private
       BucketName: {{ aws_s3_casmart_notification_bucket }}
+      LifecycleConfiguration:
+        Rules:
+          - Id: RemoveOldObjectsRule
+            Status: Enabled
+            ExpirationInDays: 365
+            NoncurrentVersionExpirationInDays: 365
+          - Id: DeleteIncompleteMultipartUploadsRule
+            Status: Enabled
+            AbortIncompleteMultipartUpload:
+              DaysAfterInitiation: 30
       Tags:
 {% for tag in aws_resource_tags %}
         - Key: {{ tag.Key }}
@@ -19,6 +29,17 @@ Resources:
     Properties:
       AccessControl: Private
       BucketName: {{ aws_s3_config_db_bucket }}
+      LifecycleConfiguration:
+        Rules:
+          - Id: OldObjectsTransitionRule
+            Status: Enabled
+            Transitions:
+              - TransitionInDays: 365
+                StorageClass: GLACIER
+          - Id: DeleteIncompleteMultipartUploadsRule
+            Status: Enabled
+            AbortIncompleteMultipartUpload:
+              DaysAfterInitiation: 30
       Tags:
 {% for tag in aws_resource_tags %}
         - Key: {{ tag.Key }}
@@ -31,6 +52,21 @@ Resources:
     Properties:
       AccessControl: Private
       BucketName: {{ aws_s3_log_bucket }}
+      LifecycleConfiguration:
+        Rules:
+          - Id: RemoveOldObjectsRule
+            Status: Enabled
+            ExpirationInDays: 730
+            NoncurrentVersionExpirationInDays: 730
+          - Id: OldObjectsTransitionRule
+            Status: Enabled
+            Transitions:
+              - TransitionInDays: 365
+                StorageClass: GLACIER
+          - Id: DeleteIncompleteMultipartUploadsRule
+            Status: Enabled
+            AbortIncompleteMultipartUpload:
+              DaysAfterInitiation: 30
       Tags:
 {% for tag in aws_resource_tags %}
         - Key: {{ tag.Key }}
@@ -43,6 +79,16 @@ Resources:
     Properties:
       AccessControl: Private
       BucketName: {{ aws_s3_thermofisher_notification_bucket }}
+      LifecycleConfiguration:
+        Rules:
+          - Id: RemoveOldObjectsRule
+            Status: Enabled
+            ExpirationInDays: 7
+            NoncurrentVersionExpirationInDays: 7
+          - Id: DeleteIncompleteMultipartUploadsRule
+            Status: Enabled
+            AbortIncompleteMultipartUpload:
+              DaysAfterInitiation: 7
       Tags:
 {% for tag in aws_resource_tags %}
         - Key: {{ tag.Key }}
