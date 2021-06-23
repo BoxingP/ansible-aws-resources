@@ -1,14 +1,14 @@
 - name: generate cloudformation template
   template:
-    src: '{{ cloudformation_template }}.j2'
-    dest: '/tmp/{{ cloudformation_template }}'
+    src: '{{ cloudformation_template }}'
+    dest: "/tmp/{{ cloudformation_template | regex_replace('.j2') }}"
     force: yes
 
 - name: create cloudformation stack
   amazon.aws.cloudformation:
     region: '{{ aws_region }}'
     stack_name: '{{ cloudformation_name }}'
-    template: '/tmp/{{ cloudformation_template }}'
+    template: "/tmp/{{ cloudformation_template | regex_replace('.j2') }}"
     tags:
       '{{ cloudformation_tags }}'
   register: cloudformation_result

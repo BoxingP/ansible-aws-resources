@@ -1,8 +1,9 @@
 ---
 aws_region: cn-northwest-1
-aws_iam_casmart_users: B2B-Casmart
-aws_iam_thermofisher_users: B2B-ThermoFisher
-aws_s3_config_db_bucket: b2b-config-db-backup
-aws_s3_casmart_notification_bucket: b2b-casmart-notification
-aws_s3_log_bucket: b2b-log-storage
-aws_s3_thermofisher_notification_bucket: b2b-thermofisher-notification
+aws_cloudformation: b2b-marketplace-test-all-cf
+aws_iam_casmart_users: b2b-marketplace-s3-casmart-test-api-user
+aws_iam_thermofisher_users: b2b-marketplace-s3-thermofisher-test-api-user
+aws_s3_config_db_bucket: b2b-marketplace-config-db-backup-test-s3
+aws_s3_casmart_notification_bucket: b2b-marketplace-data-to-thermofisher-test-s3
+aws_s3_log_bucket: b2b-marketplace-log-test-s3
+aws_s3_thermofisher_notification_bucket: b2b-marketplace-data-to-casmart-test-s3

@@ -25,8 +25,8 @@
         - include_role:
             name: create_cloudformation_stack
           vars:
-            cloudformation_name: b2b-marketplace-test
-            cloudformation_template: b2b-marketplace-test.yaml
+            cloudformation_name: '{{ aws_cloudformation }}'
+            cloudformation_template: '{{ aws_cloudformation }}.yaml.j2'
             cloudformation_tags: '{{ aws_cloudformation_tags }}'
       vars:
         ansible_python_interpreter: '{{ virtualenv }}/bin/python3'

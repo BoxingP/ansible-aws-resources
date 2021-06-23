@@ -107,7 +107,7 @@ Resources:
   CasmartUserPolicies:
     Type: AWS::IAM::Policy
     Properties:
-      PolicyName: {{ aws_iam_casmart_users }}-S3-Policy
+      PolicyName: {{ aws_iam_casmart_users }}-policy
       PolicyDocument:
         Version: '2012-10-17'
         Statement:
@@ -143,7 +143,7 @@ Resources:
   ThermoFisherUserPolicies:
     Type: AWS::IAM::Policy
     Properties:
-      PolicyName: {{ aws_iam_thermofisher_users }}-S3-Policy
+      PolicyName: {{ aws_iam_thermofisher_users }}-policy
       PolicyDocument:
         Version: '2012-10-17'
         Statement:
