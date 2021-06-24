@@ -3,16 +3,18 @@
   hosts: all
   gather_facts: yes
 
-- name: create aws s3 bucket and related iam users
+- name: create aws resources
   hosts: centos
   gather_facts: no
   vars:
     email_address: creator@example.com
-    virtualenv: '{{ hostvars[inventory_hostname].ansible_env.HOME }}/.virtualenvs/ansible-aws-s3-env'
+    project: b2b marketplace
+    deploy_environment: tst
+    virtualenv: '{{ hostvars[inventory_hostname].ansible_env.HOME }}/.virtualenvs/ansible-aws-resources-env'
   vars_files:
-    - vars/aws_configuration.yaml
     - vars/aws_credentials.yaml
-    - vars/aws_tags.yaml
+    - 'vars/{{ project | replace(" ", "_") }}_aws_configuration.yaml'
+    - 'vars/{{ project | replace(" ", "_") }}_aws_tags.yaml'
   tasks:
     - name: init server environment
       include_role:

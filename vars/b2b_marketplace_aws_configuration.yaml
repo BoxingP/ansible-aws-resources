@@ -1,0 +1,9 @@
+---
+aws_region: cn-northwest-1
+aws_cloudformation: 'b2b-marketplace-{{ deploy_environment }}-all-cf'
+aws_iam_casmart_users: 'b2b-marketplace-s3-casmart-{{ deploy_environment }}-api-user'
+aws_iam_thermofisher_users: 'b2b-marketplace-s3-thermofisher-{{ deploy_environment }}-api-user'
+aws_s3_config_db_bucket: 'b2b-marketplace-config-db-backup-{{ deploy_environment }}-s3'
+aws_s3_casmart_notification_bucket: 'b2b-marketplace-data-to-thermofisher-{{ deploy_environment }}-s3'
+aws_s3_log_bucket: 'b2b-marketplace-log-{{ deploy_environment }}-s3'
+aws_s3_thermofisher_notification_bucket: 'b2b-marketplace-data-to-casmart-{{ deploy_environment }}-s3'

@@ -1,4 +1,4 @@
-# Project to Create AWS S3 Bucket and Related Accesses
+# Project to Create AWS Resources
 
 ## Steps
 
@@ -10,10 +10,12 @@
    $ ansible-galaxy collection install -r requirements.yaml
    ```
 
+1. The created AWS resources are dependent on the variable `project`
+
 1. Run playbook:
 
    ```
    $ ansible-playbook playbook.yaml
    ```
 
-Then the AWS S3 bucket and IAM users with related accesses will be created.
+Then the AWS resources will be created.

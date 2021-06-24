@@ -13,25 +13,25 @@
       '{{ cloudformation_tags }}'
   register: cloudformation_result
 
-- name: save iam users access keys to file
+- name: save cloudformation output to file
   block:
-    - name: save access keys to file
+    - name: save output to file
       copy:
         content: "{{ cloudformation_result.stack_outputs | to_nice_yaml }}"
-        dest: '/tmp/iam_users_access_keys.yaml'
+        dest: '/tmp/cloudformation_output.yaml'
         force: yes
     - name: store file local
       fetch:
-        src: '/tmp/iam_users_access_keys.yaml'
+        src: '/tmp/cloudformation_output.yaml'
         dest: '/tmp/'
         flat: yes
   always:
     - name: check for file remote
       stat:
-        path: '/tmp/iam_users_access_keys.yaml'
+        path: '/tmp/cloudformation_output.yaml'
       register: file_result
     - name: remove file remote
       file:
-        path: '/tmp/iam_users_access_keys.yaml'
+        path: '/tmp/cloudformation_output.yaml'
         state: absent
       when: file_result.stat.exists

@@ -6,9 +6,9 @@ aws_cloudformation_tags:
   businessunit:
   costcenter:
   division: DSC
-  environment: tst
+  environment: '{{ deploy_environment }}'
   name:
-  project: B2B Marketplace
+  project: '{{ project }}'
   team name: Ops
 aws_resource_tags:
   - Key: 'app role'
@@ -24,10 +24,10 @@ aws_resource_tags:
   - Key: 'division'
     Value: 'DSC'
   - Key: 'environment'
-    Value: 'tst'
+    Value: '{{ deploy_environment }}'
   - Key: 'name'
     Value: ''
   - Key: 'project'
-    Value: 'B2B Marketplace'
+    Value: '{{ project }}'
   - Key: 'team name'
     Value: 'Ops'
