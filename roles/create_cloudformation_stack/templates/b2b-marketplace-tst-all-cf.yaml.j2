@@ -119,6 +119,15 @@ Resources:
             Resource:
               - !Sub 'arn:aws-cn:s3:::${S3CasmartBucket}'
               - !Sub 'arn:aws-cn:s3:::${S3CasmartBucket}/*'
+              - !Sub 'arn:aws-cn:s3:::${S3ThermoFisherBucket}'
+              - !Sub 'arn:aws-cn:s3:::${S3ThermoFisherBucket}/*'
+          - Sid: AllowGetObjectOfSpecificBucket
+            Effect: Allow
+            Action:
+              - 's3:GetObject'
+            Resource:
+              - !Sub 'arn:aws-cn:s3:::${S3ThermoFisherBucket}'
+              - !Sub 'arn:aws-cn:s3:::${S3ThermoFisherBucket}/*'
           - Sid: AllowPutObjectOfSpecificBucket
             Effect: Allow
             Action:
