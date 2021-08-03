@@ -8,8 +8,9 @@
   gather_facts: no
   vars:
     email_address: creator@example.com
-    project: b2b marketplace
-    deploy_environment: tst
+    project: thermofisher mall
+    deploy_environment: sandbox
+    need_keypair_created: true
     virtualenv: '{{ hostvars[inventory_hostname].ansible_env.HOME }}/.virtualenvs/ansible-aws-resources-env'
   vars_files:
     - vars/aws_credentials.yaml
@@ -22,6 +23,9 @@
     - name: create python environment
       include_role:
         name: create_python_environment
+    - name: create ec2 keypair
+      import_tasks: tasks/create_ec2_keypair.yaml
+      when: need_keypair_created
     - name: build aws environment
       block:
         - include_role:

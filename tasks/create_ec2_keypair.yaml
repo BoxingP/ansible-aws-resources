@@ -1,0 +1,32 @@
+---
+- block:
+    - name: set keypair name
+      set_fact:
+        keypair_name: '{{ project | replace(" ", "-") }}-app-db-server-{{ deploy_environment }}-{{ ansible_date_time.date | replace("-", "") }}-key'
+    - name: remove exist keypair
+      amazon.aws.ec2_key:
+        name: '{{ keypair_name }}'
+        region: '{{ aws_region }}'
+        state: absent
+    - name: create keypair
+      amazon.aws.ec2_key:
+        name: '{{ keypair_name }}'
+        region: '{{ aws_region }}'
+        force: yes
+        state: present
+      register: created_keypair
+  vars:
+    ansible_python_interpreter: '{{ virtualenv }}/bin/python3'
+  environment:
+    AWS_ACCESS_KEY_ID: '{{ aws_credential.aws_access_key_id }}'
+    AWS_SECRET_ACCESS_KEY: '{{ aws_credential.aws_secret_access_key }}'
+    PATH: '{{ virtualenv }}/bin:{{ hostvars[inventory_hostname].ansible_env.PATH }}'
+
+- name: save private key to local
+  copy:
+    content: '{{ created_keypair.key.private_key }}'
+    dest: '~/{{ keypair_name }}.pem'
+    mode: '0600'
+    force: yes
+  delegate_to: 127.0.0.1
+  when: created_keypair.key is defined and created_keypair.key.private_key is defined

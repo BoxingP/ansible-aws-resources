@@ -1,0 +1,31 @@
+---
+aws_cloudformation_tags:
+  app role:
+  application owner: '{{ email_address }}'
+  application:
+  businessunit:
+  costcenter:
+  division: DSC
+  environment: '{{ deploy_environment }}'
+  name:
+  project: '{{ project }}'
+  team name: Ops
+aws_resource_tags:
+  - Key: 'app role'
+    Value: ''
+  - Key: 'application owner'
+    Value: '{{ email_address }}'
+  - Key: 'application'
+    Value: ''
+  - Key: 'businessunit'
+    Value: ''
+  - Key: 'costcenter'
+    Value: ''
+  - Key: 'division'
+    Value: 'DSC'
+  - Key: 'environment'
+    Value: '{{ deploy_environment }}'
+  - Key: 'project'
+    Value: '{{ project }}'
+  - Key: 'team name'
+    Value: 'Ops'

@@ -1,0 +1,3 @@
+---
+aws_region: cn-northwest-1
+aws_cloudformation: 'thermofisher-mall-{{ deploy_environment }}-ec2-cf'
