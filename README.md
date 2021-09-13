@@ -15,7 +15,7 @@
 1. Run playbook:
 
    ```
-   $ ansible-playbook playbook.yaml
+   $ ansible-playbook playbook.yaml --extra-vars "project='b2b marketplace' deploy_environment=test"
    ```
 
 Then the AWS resources will be created.
