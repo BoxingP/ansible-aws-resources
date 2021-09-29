@@ -52,9 +52,12 @@ Parameters:
     AllowedPattern: (\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})/(\d{1,2})
     ConstraintDescription: must be a valid IP CIDR range of the form x.x.x.x/x.
 Mappings:
-  RegionOS2AMI:
+  ServerAppAMI:
     cn-northwest-1:
-      Windows: ami-032faed28be60a30c
+      Windows: ami-0e3dc781db0971701
+  ServerDBAMI:
+    cn-northwest-1:
+      Windows: ami-030511228617c1b3e
   OS2SSHPort:
     Linux:
       SSHPort: '22'
@@ -208,7 +211,7 @@ Resources:
       KeyName: !Ref 'KeyPairName'
       ImageId:
         'Fn::FindInMap':
-          - RegionOS2AMI
+          - ServerAppAMI
           - Ref: 'AWS::Region'
           - Ref: OperatingSystem
       BlockDeviceMappings:
@@ -233,7 +236,7 @@ Resources:
       KeyName: !Ref 'KeyPairName'
       ImageId:
         'Fn::FindInMap':
-          - RegionOS2AMI
+          - ServerDBAMI
           - Ref: 'AWS::Region'
           - Ref: OperatingSystem
       BlockDeviceMappings:
@@ -244,6 +247,28 @@ Resources:
       SubnetId: !Ref PublicSubnetA
       Tags:
         - Key: 'Name'
+          Value: '{{ project | replace(" ", "-") }}-db-server-{{ deploy_environment }}-ec2'
+{% for tag in aws_resource_tags %}
+        - Key: {{ tag.Key }}
+          Value: '{{ tag.Value }}'
+{% endfor %}
+  EC2AppInstanceEIP:
+    Type: AWS::EC2::EIP
+    Properties:
+      InstanceId: !Ref 'EC2AppInstance'
+      Tags:
+        - Key: Name
+          Value: '{{ project | replace(" ", "-") }}-app-server-{{ deploy_environment }}-ec2'
+{% for tag in aws_resource_tags %}
+        - Key: {{ tag.Key }}
+          Value: '{{ tag.Value }}'
+{% endfor %}
+  EC2DBInstanceEIP:
+    Type: AWS::EC2::EIP
+    Properties:
+      InstanceId: !Ref 'EC2DBInstance'
+      Tags:
+        - Key: Name
           Value: '{{ project | replace(" ", "-") }}-db-server-{{ deploy_environment }}-ec2'
 {% for tag in aws_resource_tags %}
         - Key: {{ tag.Key }}
@@ -306,6 +331,14 @@ Resources:
           FromPort: 1433
           ToPort: 1433
           SourceSecurityGroupId: !GetAtt AppInstanceSecurityGroup.GroupId
+        - IpProtocol: tcp
+          FromPort: 1433
+          ToPort: 1433
+          CidrIp: !Join
+                    - ''
+                    - - !Ref EC2AppInstanceEIP
+                      - '/32'
+          Description: 'App Server Public IP Address'
         - IpProtocol: tcp
           FromPort:
             'Fn::FindInMap':
