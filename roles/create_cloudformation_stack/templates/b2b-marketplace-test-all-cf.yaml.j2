@@ -18,9 +18,9 @@ Resources:
             AbortIncompleteMultipartUpload:
               DaysAfterInitiation: 7
       Tags:
-{% for tag in aws_resource_tags %}
-        - Key: {{ tag.Key }}
-          Value: '{{ tag.Value }}'
+{% for key, value in aws_tags.items() %}
+        - Key: {{ key }}
+          Value: '{{ value }}'
 {% endfor %}
       VersioningConfiguration:
         Status: Enabled
@@ -40,9 +40,9 @@ Resources:
             ExpirationInDays: 30
             NoncurrentVersionExpirationInDays: 30
       Tags:
-{% for tag in aws_resource_tags %}
-        - Key: {{ tag.Key }}
-          Value: '{{ tag.Value }}'
+{% for key, value in aws_tags.items() %}
+        - Key: {{ key }}
+          Value: '{{ value }}'
 {% endfor %}
       VersioningConfiguration:
         Status: Enabled
@@ -67,9 +67,9 @@ Resources:
             AbortIncompleteMultipartUpload:
               DaysAfterInitiation: 7
       Tags:
-{% for tag in aws_resource_tags %}
-        - Key: {{ tag.Key }}
-          Value: '{{ tag.Value }}'
+{% for key, value in aws_tags.items() %}
+        - Key: {{ key }}
+          Value: '{{ value }}'
 {% endfor %}
       VersioningConfiguration:
         Status: Enabled
@@ -89,9 +89,9 @@ Resources:
             AbortIncompleteMultipartUpload:
               DaysAfterInitiation: 7
       Tags:
-{% for tag in aws_resource_tags %}
-        - Key: {{ tag.Key }}
-          Value: '{{ tag.Value }}'
+{% for key, value in aws_tags.items() %}
+        - Key: {{ key }}
+          Value: '{{ value }}'
 {% endfor %}
       VersioningConfiguration:
         Status: Enabled
@@ -99,9 +99,9 @@ Resources:
     Type: AWS::IAM::User
     Properties:
       Tags:
-{% for tag in aws_resource_tags %}
-        - Key: {{ tag.Key }}
-          Value: '{{ tag.Value }}'
+{% for key, value in aws_tags.items() %}
+        - Key: {{ key }}
+          Value: '{{ value }}'
 {% endfor %}
       UserName: {{ aws_iam_casmart_users }}
   CasmartUserPolicies:
@@ -144,9 +144,9 @@ Resources:
     Type: AWS::IAM::User
     Properties:
       Tags:
-{% for tag in aws_resource_tags %}
-        - Key: {{ tag.Key }}
-          Value: '{{ tag.Value }}'
+{% for key, value in aws_tags.items() %}
+        - Key: {{ key }}
+          Value: '{{ value }}'
 {% endfor %}
       UserName: {{ aws_iam_thermofisher_users }}
   ThermoFisherUserPolicies:

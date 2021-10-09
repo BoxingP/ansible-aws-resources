@@ -7,15 +7,10 @@
   hosts: centos
   gather_facts: no
   vars:
-    email_address: creator@example.com
-    project: thermofisher mall
-    deploy_environment: sandbox
-    need_keypair_created: true
     virtualenv: '{{ hostvars[inventory_hostname].ansible_env.HOME }}/.virtualenvs/ansible-aws-resources-env'
   vars_files:
     - vars/aws_credentials.yaml
-    - 'vars/{{ project | replace(" ", "_") }}_aws_configuration.yaml'
-    - 'vars/{{ project | replace(" ", "_") }}_aws_tags.yaml'
+    - 'vars/aws_tags.yaml'
   tasks:
     - name: init server environment
       include_role:
@@ -26,14 +21,21 @@
     - name: create ec2 keypair
       import_tasks: tasks/create_ec2_keypair.yaml
       when: need_keypair_created
+    - name: import extra aws configuration
+      block:
+        - name: check aws configuration exists
+          stat:
+            path: '{{ playbook_dir }}/vars/{{ project | replace(" ", "_") }}_aws_configuration.yaml'
+          register: extra_exist
+          delegate_to: 127.0.0.1
+        - name: import aws configuration
+          include_vars:
+            file: 'vars/{{ project | replace(" ", "_") }}_aws_configuration.yaml'
+          when: extra_exist.stat.exists
     - name: build aws environment
       block:
         - include_role:
             name: create_cloudformation_stack
-          vars:
-            cloudformation_name: '{{ aws_cloudformation }}'
-            cloudformation_template: '{{ aws_cloudformation }}.yaml.j2'
-            cloudformation_tags: '{{ aws_cloudformation_tags }}'
       vars:
         ansible_python_interpreter: '{{ virtualenv }}/bin/python3'
       environment:

@@ -72,12 +72,14 @@ Resources:
       EnableDnsSupport: true
       InstanceTenancy: default
       Tags:
-        - Key: Name
+{% for key, value in aws_tags.items() %}
+        - Key: {{ key }}
+{% if key=='Name' %}
           Value:
             Fn::Sub: '{{ project | replace(" ", "-") }}-${AWS::Region}-{{ deploy_environment }}'
-{% for tag in aws_resource_tags %}
-        - Key: {{ tag.Key }}
-          Value: '{{ tag.Value }}'
+{% else %}
+          Value: '{{ value }}'
+{% endif %}
 {% endfor %}
   InternetGateway:
     Type: AWS::EC2::InternetGateway
@@ -95,11 +97,13 @@ Resources:
       AvailabilityZone: !Select [ 0, !GetAZs '' ]
       MapPublicIpOnLaunch: true
       Tags:
-        - Key: Name
+{% for key, value in aws_tags.items() %}
+        - Key: {{ key }}
+{% if key=='Name' %}
           Value: !Sub '{{ project | replace(" ", "-") }}-${AWS::Region}-{{ deploy_environment }}-public-a'
-{% for tag in aws_resource_tags %}
-        - Key: {{ tag.Key }}
-          Value: '{{ tag.Value }}'
+{% else %}
+          Value: '{{ value }}'
+{% endif %}
 {% endfor %}
   PublicSubnetB:
     Type: AWS::EC2::Subnet
@@ -109,11 +113,13 @@ Resources:
       AvailabilityZone: !Select [ 1, !GetAZs '' ]
       MapPublicIpOnLaunch: true
       Tags:
-        - Key: Name
+{% for key, value in aws_tags.items() %}
+        - Key: {{ key }}
+{% if key=='Name' %}
           Value: !Sub '{{ project | replace(" ", "-") }}-${AWS::Region}-{{ deploy_environment }}-public-b'
-{% for tag in aws_resource_tags %}
-        - Key: {{ tag.Key }}
-          Value: '{{ tag.Value }}'
+{% else %}
+          Value: '{{ value }}'
+{% endif %}
 {% endfor %}
   PrivateSubnetA:
     Type: AWS::EC2::Subnet
@@ -123,11 +129,13 @@ Resources:
       AvailabilityZone: !Select [ 0, !GetAZs '' ]
       MapPublicIpOnLaunch: false
       Tags:
-        - Key: Name
+{% for key, value in aws_tags.items() %}
+        - Key: {{ key }}
+{% if key=='Name' %}
           Value: !Sub '{{ project | replace(" ", "-") }}-${AWS::Region}-{{ deploy_environment }}-private-a'
-{% for tag in aws_resource_tags %}
-        - Key: {{ tag.Key }}
-          Value: '{{ tag.Value }}'
+{% else %}
+          Value: '{{ value }}'
+{% endif %}
 {% endfor %}
   PrivateSubnetB:
     Type: AWS::EC2::Subnet
@@ -137,19 +145,27 @@ Resources:
       AvailabilityZone: !Select [ 1, !GetAZs '' ]
       MapPublicIpOnLaunch: false
       Tags:
-        - Key: Name
+{% for key, value in aws_tags.items() %}
+        - Key: {{ key }}
+{% if key=='Name' %}
           Value: !Sub '{{ project | replace(" ", "-") }}-${AWS::Region}-{{ deploy_environment }}-private-b'
-{% for tag in aws_resource_tags %}
-        - Key: {{ tag.Key }}
-          Value: '{{ tag.Value }}'
+{% else %}
+          Value: '{{ value }}'
+{% endif %}
 {% endfor %}
   PublicRouteTable:
     Type: AWS::EC2::RouteTable
     Properties:
       VpcId: !Ref TFSMallVPC
       Tags:
-      - Key: Name
-        Value: Public
+{% for key, value in aws_tags.items() %}
+        - Key: {{ key }}
+{% if key=='Name' %}
+          Value: !Sub '{{ project | replace(" ", "-") }}-${AWS::Region}-{{ deploy_environment }}-public'
+{% else %}
+          Value: '{{ value }}'
+{% endif %}
+{% endfor %}
   PublicRoute1:
     Type: AWS::EC2::Route
     DependsOn: AttachGateway
@@ -162,8 +178,14 @@ Resources:
     Properties:
       VpcId: !Ref TFSMallVPC
       Tags:
-      - Key: Name
-        Value: Private
+{% for key, value in aws_tags.items() %}
+        - Key: {{ key }}
+{% if key=='Name' %}
+          Value: !Sub '{{ project | replace(" ", "-") }}-${AWS::Region}-{{ deploy_environment }}-private'
+{% else %}
+          Value: '{{ value }}'
+{% endif %}
+{% endfor %}
   PrivateRoute1:
     Type: AWS::EC2::Route
     Properties:
@@ -196,8 +218,14 @@ Resources:
       AllocationId: !GetAtt ElasticIPAddress.AllocationId
       SubnetId: !Ref PublicSubnetA
       Tags:
-      - Key: Name
-        Value: !Sub NAT-${AWS::StackName}
+{% for key, value in aws_tags.items() %}
+        - Key: {{ key }}
+{% if key=='Name' %}
+          Value: !Sub '{{ project | replace(" ", "-") }}-${AWS::Region}-{{ deploy_environment }}-ig'
+{% else %}
+          Value: '{{ value }}'
+{% endif %}
+{% endfor %}
   ElasticIPAddress:
     Type: AWS::EC2::EIP
     Properties:
@@ -221,11 +249,13 @@ Resources:
             VolumeType: gp2
       SubnetId: !Ref PublicSubnetA
       Tags:
-        - Key: 'Name'
+{% for key, value in aws_tags.items() %}
+        - Key: {{ key }}
+{% if key=='Name' %}
           Value: '{{ project | replace(" ", "-") }}-app-server-{{ deploy_environment }}-ec2'
-{% for tag in aws_resource_tags %}
-        - Key: {{ tag.Key }}
-          Value: '{{ tag.Value }}'
+{% else %}
+          Value: '{{ value }}'
+{% endif %}
 {% endfor %}
   EC2DBInstance:
     Type: AWS::EC2::Instance
@@ -246,33 +276,39 @@ Resources:
             VolumeType: gp2
       SubnetId: !Ref PublicSubnetA
       Tags:
-        - Key: 'Name'
+{% for key, value in aws_tags.items() %}
+        - Key: {{ key }}
+{% if key=='Name' %}
           Value: '{{ project | replace(" ", "-") }}-db-server-{{ deploy_environment }}-ec2'
-{% for tag in aws_resource_tags %}
-        - Key: {{ tag.Key }}
-          Value: '{{ tag.Value }}'
+{% else %}
+          Value: '{{ value }}'
+{% endif %}
 {% endfor %}
   EC2AppInstanceEIP:
     Type: AWS::EC2::EIP
     Properties:
       InstanceId: !Ref 'EC2AppInstance'
       Tags:
-        - Key: Name
+{% for key, value in aws_tags.items() %}
+        - Key: {{ key }}
+{% if key=='Name' %}
           Value: '{{ project | replace(" ", "-") }}-app-server-{{ deploy_environment }}-ec2'
-{% for tag in aws_resource_tags %}
-        - Key: {{ tag.Key }}
-          Value: '{{ tag.Value }}'
+{% else %}
+          Value: '{{ value }}'
+{% endif %}
 {% endfor %}
   EC2DBInstanceEIP:
     Type: AWS::EC2::EIP
     Properties:
       InstanceId: !Ref 'EC2DBInstance'
       Tags:
-        - Key: Name
+{% for key, value in aws_tags.items() %}
+        - Key: {{ key }}
+{% if key=='Name' %}
           Value: '{{ project | replace(" ", "-") }}-db-server-{{ deploy_environment }}-ec2'
-{% for tag in aws_resource_tags %}
-        - Key: {{ tag.Key }}
-          Value: '{{ tag.Value }}'
+{% else %}
+          Value: '{{ value }}'
+{% endif %}
 {% endfor %}
   AppInstanceSecurityGroup:
     Type: AWS::EC2::SecurityGroup
@@ -316,12 +352,18 @@ Resources:
           CidrIp: !Ref 'OfficeLocation2'
           Description: 'Jifen Keji Office'
       Tags:
-{% for tag in aws_resource_tags %}
-        - Key: {{ tag.Key }}
-          Value: '{{ tag.Value }}'
+{% for key, value in aws_tags.items() %}
+        - Key: {{ key }}
+{% if key=='Name' %}
+          Value: '{{ project | replace(" ", "-") }}-app-server-{{ deploy_environment }}-sg'
+{% else %}
+          Value: '{{ value }}'
+{% endif %}
 {% endfor %}
   DBInstanceSecurityGroup:
     Type: AWS::EC2::SecurityGroup
+    DependsOn:
+      - EC2AppInstanceEIP
     Properties:
       GroupDescription: Enable DB access and SSH access
       GroupName: '{{ project | replace(" ", "-") }}-db-server-{{ deploy_environment }}-sg'
@@ -336,7 +378,7 @@ Resources:
           ToPort: 1433
           CidrIp: !Join
                     - ''
-                    - - !Ref EC2AppInstanceEIP
+                    - - !GetAtt [EC2AppInstance, PublicIp]
                       - '/32'
           Description: 'App Server Public IP Address'
         - IpProtocol: tcp
@@ -366,9 +408,13 @@ Resources:
           CidrIp: !Ref 'OfficeLocation2'
           Description: 'Jifen Keji Office'
       Tags:
-{% for tag in aws_resource_tags %}
-        - Key: {{ tag.Key }}
-          Value: '{{ tag.Value }}'
+{% for key, value in aws_tags.items() %}
+        - Key: {{ key }}
+{% if key=='Name' %}
+          Value: '{{ project | replace(" ", "-") }}-db-server-{{ deploy_environment }}-sg'
+{% else %}
+          Value: '{{ value }}'
+{% endif %}
 {% endfor %}
 Outputs:
   AppInstanceId:

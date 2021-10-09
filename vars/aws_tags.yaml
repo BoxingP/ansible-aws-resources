@@ -1,0 +1,12 @@
+---
+aws_tags:
+  app role:
+  application owner: '{{ email_address }}'
+  application:
+  businessunit:
+  costcenter:
+  division: 'DSC'
+  environment: '{{ deploy_environment }}'
+  Name:
+  project: '{{ project }}'
+  team name: 'Ops'

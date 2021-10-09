@@ -1,0 +1,4 @@
+---
+cloudformation_name: '{{ project | replace(" ", "-") }}-{{ deploy_environment }}-all-cf'
+cloudformation_template: '{{ cloudformation_name }}.yaml.j2'
+cloudformation_tags: '{{ aws_tags }}'
