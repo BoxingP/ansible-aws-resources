@@ -1,4 +1,4 @@
 ---
-cloudformation_name: '{{ project | replace(" ", "-") }}-{{ deploy_environment }}-all-cf'
-cloudformation_template: '{{ cloudformation_name }}.yaml.j2'
+cloudformation_template: '{{ project | replace(" ", "-") }}-environment-all-cf.yaml.j2'
+cloudformation_name: "{{ cloudformation_template | regex_replace('.yaml.j2') | regex_replace('^(?P<project>.*)environment(?P<sign>.*)$', '\\g<project>' + deploy_environment + '\\g<sign>') }}"
 cloudformation_tags: '{{ aws_tags }}'
