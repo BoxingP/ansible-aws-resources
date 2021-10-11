@@ -22,7 +22,7 @@
 
 - name: upload python requirements file
   copy:
-    src: 'vars/requirements.txt'
+    src: 'requirements.txt'
     dest: '{{ virtualenv }}/requirements.txt'
     force: yes
   become: yes
