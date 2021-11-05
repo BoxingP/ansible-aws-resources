@@ -1,0 +1,9 @@
+---
+- name: install aws cdk
+  community.general.npm:
+    name: aws-cdk
+    global: yes
+    state: present
+
+- name: bootstrap cdk
+  command: cdk bootstrap aws://{{ aws_credential.aws_account_id }}/{{ aws_region }}

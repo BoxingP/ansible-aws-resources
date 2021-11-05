@@ -1,0 +1,4 @@
+---
+nodejs_version: '14.x'
+npm_config_prefix: '/usr/local/lib/npm'
+nodejs_generate_etc_profile: true

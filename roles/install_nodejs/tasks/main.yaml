@@ -1,0 +1,30 @@
+---
+- name: install node.js for debian
+  import_tasks: debian.yaml
+  when: ansible_facts['os_family']|lower == 'debian'
+
+- name: install node.js for rhel
+  import_tasks: redhat.yaml
+  when: ansible_facts['os_family']|lower == 'redhat'
+
+- name: define nodejs_install_npm_user
+  set_fact:
+    nodejs_install_npm_user: '{{ ansible_user | default(lookup("env", "USER")) }}'
+  when: nodejs_install_npm_user is not defined
+
+- name: create npm global directory
+  file:
+    path: "{{ npm_config_prefix }}"
+    owner: "{{ nodejs_install_npm_user }}"
+    group: "{{ nodejs_install_npm_user }}"
+    state: directory
+    mode: 0755
+  become: yes
+
+- name: add npm_config_prefix bin directory to global path
+  template:
+    src: npm.sh.j2
+    dest: /etc/profile.d/npm.sh
+    mode: 0644
+  become: yes
+  when: nodejs_generate_etc_profile

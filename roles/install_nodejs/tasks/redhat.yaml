@@ -1,0 +1,28 @@
+---
+- name: import nodesource rpm key
+  rpm_key:
+    key: https://rpm.nodesource.com/pub/el/NODESOURCE-GPG-SIGNING-KEY-EL
+    state: present
+  become: yes
+
+- name: add nodesource repositories for node.js
+  yum:
+    name: 'https://rpm.nodesource.com/pub_{{ nodejs_version }}/el/{{ ansible_distribution_major_version  }}/{{ ansible_architecture }}/nodesource-release-el{{ ansible_distribution_major_version }}-1.noarch.rpm'
+    state: present
+  become: yes
+
+- name: ensure node.js appstream module is disabled
+  command: yum module disable -y nodejs
+  args:
+    warn: false
+  register: module_disable
+  changed_when: "'Nothing to do.' not in module_disable.stdout"
+  when: ansible_distribution_major_version|int >= 8
+  become: yes
+
+- name: ensure node.js is installed
+  yum:
+    name: 'nodejs-{{ nodejs_version | regex_replace("x", "") }}*'
+    state: present
+    enablerepo: nodesource
+  become: yes

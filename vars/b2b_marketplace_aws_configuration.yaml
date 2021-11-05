@@ -1,7 +1,0 @@
----
-aws_iam_casmart_users: '{{ project | replace(" ", "-") }}-s3-casmart-{{ deploy_environment }}-api-user'
-aws_iam_thermofisher_users: '{{ project | replace(" ", "-") }}-s3-thermofisher-{{ deploy_environment }}-api-user'
-aws_s3_config_db_bucket: '{{ project | replace(" ", "-") }}-config-db-backup-{{ deploy_environment }}-s3'
-aws_s3_casmart_notification_bucket: '{{ project | replace(" ", "-") }}-data-to-thermofisher-{{ deploy_environment }}-s3'
-aws_s3_log_bucket: '{{ project | replace(" ", "-") }}-log-{{ deploy_environment }}-s3'
-aws_s3_thermofisher_notification_bucket: '{{ project | replace(" ", "-") }}-data-to-casmart-{{ deploy_environment }}-s3'

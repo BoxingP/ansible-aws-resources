@@ -3,42 +3,49 @@
   hosts: all
   gather_facts: yes
 
+- name: do preparation
+  hosts: localhost
+  gather_facts: no
+  vars_files:
+    - vars/codes.yaml
+  tasks:
+    - name: load configuration
+      include_tasks: tasks/load_config.yaml
+    - name: load ssh key
+      include_tasks: tasks/load_ssh_key.yaml
+
 - name: create aws resources
   hosts: centos
   gather_facts: no
   vars:
     virtualenv: '{{ hostvars[inventory_hostname].ansible_env.HOME }}/.virtualenvs/ansible-aws-resources-env'
+    ansible_ssh_common_args: '-o IdentityAgent={{ hostvars["localhost"]["env_vars"]["SSH_AUTH_SOCK"] }}'
   vars_files:
     - vars/aws_credentials.yaml
-    - 'vars/aws_tags.yaml'
   tasks:
     - name: init server environment
       include_role:
         name: init_server_environment
+    - name: install node.js
+      include_role:
+        name: install_nodejs
     - name: create python environment
       include_role:
         name: create_python_environment
-    - name: create ec2 keypair
-      import_tasks: tasks/create_ec2_keypair.yaml
-      when: need_keypair_created
-    - name: import extra aws configuration
-      block:
-        - name: check aws configuration exists
-          stat:
-            path: '{{ playbook_dir }}/vars/{{ project | replace(" ", "_") }}_aws_configuration.yaml'
-          register: extra_exist
-          delegate_to: 127.0.0.1
-        - name: import aws configuration
-          include_vars:
-            file: 'vars/{{ project | replace(" ", "_") }}_aws_configuration.yaml'
-          when: extra_exist.stat.exists
+    - name: init workspace
+      include_tasks: tasks/init_workspace.yaml
     - name: build aws environment
       block:
-        - include_role:
-            name: create_cloudformation_stack
+        - name: set up aws cdk
+          import_tasks: tasks/set_up_aws_cdk.yaml
+        - name: create aws resources
+          import_tasks: tasks/create_aws_resources.yaml
       vars:
         ansible_python_interpreter: '{{ virtualenv }}/bin/python3'
       environment:
         AWS_ACCESS_KEY_ID: '{{ aws_credential.aws_access_key_id }}'
         AWS_SECRET_ACCESS_KEY: '{{ aws_credential.aws_secret_access_key }}'
+        AWS_DEFAULT_REGION: '{{ aws_region }}'
+        CDK_DEFAULT_ACCOUNT: '{{ aws_credential.aws_account_id }}'
+        CDK_DEFAULT_REGION: '{{ aws_region }}'
         PATH: '{{ virtualenv }}/bin:{{ hostvars[inventory_hostname].ansible_env.PATH }}'

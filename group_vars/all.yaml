@@ -3,4 +3,3 @@ project: thermofisher mall
 deploy_environment: sandbox
 email_address: creator@example.com
 aws_region: cn-northwest-1
-need_keypair_created: true
