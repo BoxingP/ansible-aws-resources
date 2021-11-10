@@ -16,6 +16,7 @@
 
     - [EC2 instances with VPC](https://github.com/BoxingP/ec2-with-vpc)
     - [S3 buckets with IAM](https://github.com/BoxingP/s3-buckets-with-iam)
+    - [Start Stop Instances](https://github.com/BoxingP/start-stop-instances)
 
 1. Run playbook:
 
