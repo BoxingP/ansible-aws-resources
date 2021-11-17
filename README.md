@@ -18,6 +18,8 @@
     - [S3 buckets with IAM](https://github.com/BoxingP/s3-buckets-with-iam)
     - [Filter Out Instances by Tags](https://github.com/BoxingP/filter-out-instances)
     - [Start Stop Instances](https://github.com/BoxingP/start-stop-instances)
+    - [Start Stop Policy](https://github.com/BoxingP/start-stop-policy)
+    - [Start Stop Scheduler](https://github.com/BoxingP/start-stop-scheduler)
 
 1. Run playbook:
 

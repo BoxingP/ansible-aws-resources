@@ -20,3 +20,13 @@ code:
     branch: master
     repo_private_key: '{{ hostvars[inventory_hostname].ansible_env.HOME }}/.ssh/id_rsa_github_boxingp'
     local_path: '/tmp/{{ project | replace(" ", "_") }}_{{ deploy_environment }}'
+  - project: start stop policy
+    repo: git@github.com:BoxingP/start-stop-policy.git
+    branch: master
+    repo_private_key: '{{ hostvars[inventory_hostname].ansible_env.HOME }}/.ssh/id_rsa_github_boxingp'
+    local_path: '/tmp/{{ project | replace(" ", "_") }}_{{ deploy_environment }}'
+  - project: start stop scheduler
+    repo: git@github.com:BoxingP/start-stop-scheduler.git
+    branch: master
+    repo_private_key: '{{ hostvars[inventory_hostname].ansible_env.HOME }}/.ssh/id_rsa_github_boxingp'
+    local_path: '/tmp/{{ project | replace(" ", "_") }}_{{ deploy_environment }}'
