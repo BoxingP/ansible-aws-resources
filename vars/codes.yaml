@@ -30,3 +30,9 @@ code:
     branch: master
     repo_private_key: '{{ hostvars[inventory_hostname].ansible_env.HOME }}/.ssh/id_rsa_github_boxingp'
     local_path: '/tmp/{{ project | replace(" ", "_") }}_{{ deploy_environment }}'
+  - project: selenium auto test
+    repo: git@github.com:BoxingP/selenium-auto-test.git
+    branch: master
+    repo_private_key: '{{ hostvars[inventory_hostname].ansible_env.HOME }}/.ssh/id_rsa_github_boxingp'
+    local_path: '/tmp/{{ project | replace(" ", "_") }}_{{ deploy_environment }}'
+    ansible_task: tasks.yaml

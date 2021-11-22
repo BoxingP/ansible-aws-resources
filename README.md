@@ -20,6 +20,7 @@
     - [Start Stop Instances](https://github.com/BoxingP/start-stop-instances)
     - [Start Stop Policy](https://github.com/BoxingP/start-stop-policy)
     - [Start Stop Scheduler](https://github.com/BoxingP/start-stop-scheduler)
+    - [Selenium Automation Test](https://github.com/BoxingP/selenium-auto-test)
 
 1. Run playbook:
 

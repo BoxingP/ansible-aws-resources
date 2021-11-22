@@ -1,4 +1,17 @@
 ---
+- name: run pre-tasks
+  block:
+    - name: fetch tasks
+      fetch:
+        src: '{{ hostvars["localhost"]["code"]["local_path"] }}/{{ hostvars["localhost"]["code"]["ansible_task"] }}'
+        dest: '/tmp/'
+        flat: yes
+        fail_on_missing: yes
+      run_once: yes
+    - name: run tasks
+      include_tasks: '/tmp/{{ hostvars["localhost"]["code"]["ansible_task"] }}'
+  when: hostvars["localhost"]["code"]["ansible_task"] is defined
+
 - name: create python virtualenv
   pip:
     requirements: '{{ hostvars["localhost"]["code"]["local_path"] }}/requirements.txt'
