@@ -29,24 +29,6 @@
   args:
     chdir: '{{ hostvars["localhost"]["code"]["local_path"] }}'
 
-- name: save cloudformation outputs
-  block:
-    - name: store file local
-      fetch:
-        src: '/tmp/cdk_outputs.json'
-        dest: '/tmp/{{ project | replace(" ", "_") }}_{{ deploy_environment }}_{{ aws_credential.aws_account_id }}.json'
-        flat: yes
-  always:
-    - name: check for file remote
-      stat:
-        path: '/tmp/cdk_outputs.json'
-      register: file_result
-    - name: remove file remote
-      file:
-        path: '/tmp/cdk_outputs.json'
-        state: absent
-      when: file_result.stat.exists
-
 - name: run post-tasks
   block:
     - name: fetch tasks
@@ -59,3 +41,21 @@
     - name: run tasks
       include_tasks: '/tmp/{{ hostvars["localhost"]["code"]["ansible_post_task"] }}'
   when: hostvars["localhost"]["code"]["ansible_post_task"] is defined
+
+- name: save cloudformation outputs
+  block:
+    - name: store cloudformation outputs local
+      fetch:
+        src: '/tmp/cdk_outputs.json'
+        dest: '/tmp/{{ project | replace(" ", "_") }}_{{ deploy_environment }}_{{ aws_credential.aws_account_id }}.json'
+        flat: yes
+  always:
+    - name: check for cloudformation outputs remote
+      stat:
+        path: '/tmp/cdk_outputs.json'
+      register: file_result
+    - name: remove cloudformation outputs remote
+      file:
+        path: '/tmp/cdk_outputs.json'
+        state: absent
+      when: file_result.stat.exists
