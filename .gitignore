@@ -1,4 +1,4 @@
 .idea
 .vault_pass
 vars/aws_credentials.yaml
-vars/selenium_auto_test_users.yaml
+vars/selenium_auto_test_users.json

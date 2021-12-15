@@ -20,17 +20,17 @@
   loop:
     - .git
 
-- name: generate aws tags info
+- name: generate config
   block:
     - name: fetch template from remote
       fetch:
-        src: '{{ hostvars["localhost"]["code"]["local_path"] }}/aws_tags.yaml.j2'
+        src: '{{ hostvars["localhost"]["code"]["local_path"] }}/config.yaml.j2'
         dest: '/tmp/'
         flat: yes
         fail_on_missing : yes
       run_once: yes
-    - name: template remote host
+    - name: upload file to remote
       template:
-        src: '/tmp/aws_tags.yaml.j2'
-        dest: '{{ hostvars["localhost"]["code"]["local_path"] }}/aws_tags.yaml'
+        src: '/tmp/config.yaml.j2'
+        dest: '{{ hostvars["localhost"]["code"]["local_path"] }}/config.yaml'
         force: yes
