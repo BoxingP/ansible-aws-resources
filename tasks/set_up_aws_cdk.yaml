@@ -6,4 +6,4 @@
     state: present
 
 - name: bootstrap cdk
-  command: cdk bootstrap aws://{{ aws_credential.aws_account_id }}/{{ aws_region }}
+  command: 'cdk bootstrap aws://{{ aws_credential.aws_account_id }}/{{ aws_region }}'
