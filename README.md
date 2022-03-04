@@ -25,7 +25,7 @@
 1. Run playbook:
 
    ```
-   $ ansible-playbook playbook.yaml --extra-vars "project='{{ project name }}' deploy_environment={{ deploy environment }}"
+   $ ansible-playbook playbook.yaml --extra-vars "project='{{ project name }}' deploy_environment={{ deploy environment }} repo={{ code repo used }}"
    ```
 
 Then the AWS resources will be created.
